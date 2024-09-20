@@ -16,15 +16,17 @@ function formatString(csvString) {
     const yValue = [];
     const zValue = [];
 
-    const result = [[xValue], [yValue], [zValue]];
-
     for(let i = 2; i < rows.length; i++) {
         const values = rows[i].split(',');
-        xValue.push(values[0]);
-        yValue.push(values[1]);
-        zValue.push(values[2]);
+        xValue.push(String(values[0]));
+        yValue.push(String(values[1]));
+        zValue.push(String(values[2]));
     }
-    return result;
+    return {
+        xValue: xValue,
+        yValue: yValue,
+        zValue: zValue
+    };
 }
 
 exports.getReflectivity = (req, res) => {
