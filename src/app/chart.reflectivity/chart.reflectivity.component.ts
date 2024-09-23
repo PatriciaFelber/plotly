@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import { CommonModule } from '@angular/common';
 
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { PlotlyModule } from 'angular-plotly.js';
@@ -10,7 +9,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
 @Component({
   selector: 'app-chart-reflectivity',
   standalone: true,
-  imports: [PlotlyModule, CommonModule],
+  imports: [PlotlyModule],
   templateUrl: './chart.reflectivity.component.html',
   styleUrl: './chart.reflectivity.component.css'
 })
@@ -21,8 +20,8 @@ export class ChartReflectivityComponent implements OnInit{
   
   public graph = {
     data: [
-        { x: this.xData, y: this.yData, z: this.zData, type: 'scatter3d', mode: 'markers', marker: {color: 'red', size: 2} },
-        { x: this.xData, y: this.yData, z: this.zData, type: 'mesh3d', opacity: 0.5, alphahull: 10},
+        { x: this.xData, y: this.yData, z: this.zData, type: 'scatter3d', mode: 'markers', marker: {color: this.zData, colorscale: 'Jet', size: 5, showscale: true, cmin: 1.003, cmax: 1.007} },
+        { alphahull: 0.1, opacity: 1, type: 'mesh3d', x: this.xData, y: this.yData, z: this.zData},
     ],
     layout: {
       autosize: true,
@@ -59,11 +58,12 @@ export class ChartReflectivityComponent implements OnInit{
               zeroline: false
           },
           zaxis: {
+              title: 'r80Corr',
               type: 'linear',
               zeroline: false
           }
       },
-      title: '3d point clustering',
+      title: 'Reflectivity Pointwise',
       width: 477
     }
   }
@@ -77,6 +77,11 @@ export class ChartReflectivityComponent implements OnInit{
       this.graph.data[0].x = data.xValue;
       this.graph.data[0].y = data.yValue;
       this.graph.data[0].z = data.zValue;
+      this.graph.data[0].marker!.color = data.zValue;
+
+      this.graph.data[1].x = data.xValue;
+      this.graph.data[1].y = data.yValue;
+      this.graph.data[1].z = data.zValue;
     }, error => {
       console.error('Fehler beim laden der reflectivity Daten: ', error);
     });
